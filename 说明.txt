@@ -1,0 +1,50 @@
+使用权限插件entrust
+https://github.com/Zizaco/entrust
+
+    In order to install Laravel 5 Entrust, just add the following to your composer.json. Then run composer update:
+
+"zizaco/entrust": "5.2.x-dev"
+
+    Open your config/app.php and add the following to the providers array:
+
+Zizaco\Entrust\EntrustServiceProvider::class,
+
+    In the same config/app.php and add the following to the aliases array:
+
+'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+
+    Run the command below to publish the package config file config/entrust.php:
+
+php artisan vendor:publish
+
+    Open your config/auth.php and add the following to it:
+
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => Namespace\Of\Your\User\Model\User::class,
+        'table' => 'users',
+    ],
+],
+
+    If you want to use Middleware (requires Laravel 5.1 or later) you also need to add the following:
+
+    'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
+    'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
+    'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
+
+to routeMiddleware array in app/Http/Kernel.php.
+Configuration
+
+Set the property values in the config/auth.php. These values will be used by entrust to refer to the correct user table and model.
+
+To further customize table names and model namespaces, edit the config/entrust.php.
+User relation to roles
+
+Now generate the Entrust migration:
+
+php artisan entrust:migration
+
+It will generate the <timestamp>_entrust_setup_tables.php migration. You may now run it with the artisan migrate command:
+
+php artisan migrate
